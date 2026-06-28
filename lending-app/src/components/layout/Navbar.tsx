@@ -1,19 +1,47 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { TrendingUp, LogOut, LayoutDashboard, Menu, X } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/context/AuthContext'
 
+function useScrollToSection() {
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  return (sectionId: string, onDone?: () => void) => {
+    const scroll = () => {
+      const el = document.getElementById(sectionId)
+      if (el) el.scrollIntoView({ behavior: 'smooth' })
+      onDone?.()
+    }
+
+    if (location.pathname === '/') {
+      scroll()
+    } else {
+      navigate('/')
+      // wait for landing page to mount before scrolling
+      setTimeout(scroll, 300)
+    }
+  }
+}
+
 export function Navbar() {
   const { user, signOut } = useAuth()
   const navigate = useNavigate()
+  const scrollTo = useScrollToSection()
   const [mobileOpen, setMobileOpen] = useState(false)
 
   const handleSignOut = async () => {
     await signOut()
     navigate('/')
   }
+
+  const navLinks = [
+    { label: 'How It Works', id: 'how-it-works' },
+    { label: 'Features', id: 'features' },
+    { label: 'Rates', id: 'rates' },
+  ]
 
   return (
     <motion.nav
@@ -34,15 +62,15 @@ export function Navbar() {
           </Link>
 
           <div className="hidden md:flex items-center gap-8">
-            <Link to="/#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              How It Works
-            </Link>
-            <Link to="/#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              Features
-            </Link>
-            <Link to="/#rates" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              Rates
-            </Link>
+            {navLinks.map(({ label, id }) => (
+              <button
+                key={id}
+                onClick={() => scrollTo(id)}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+              >
+                {label}
+              </button>
+            ))}
           </div>
 
           <div className="hidden md:flex items-center gap-3">
@@ -82,19 +110,31 @@ export function Navbar() {
 
       {mobileOpen && (
         <div className="md:hidden border-t border-border bg-background/95 backdrop-blur-xl px-4 py-4 space-y-3">
-          <Link to="/#how-it-works" className="block text-sm text-muted-foreground" onClick={() => setMobileOpen(false)}>How It Works</Link>
-          <Link to="/#features" className="block text-sm text-muted-foreground" onClick={() => setMobileOpen(false)}>Features</Link>
-          <Link to="/#rates" className="block text-sm text-muted-foreground" onClick={() => setMobileOpen(false)}>Rates</Link>
+          {navLinks.map(({ label, id }) => (
+            <button
+              key={id}
+              onClick={() => scrollTo(id, () => setMobileOpen(false))}
+              className="block w-full text-left text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {label}
+            </button>
+          ))}
           <div className="flex flex-col gap-2 pt-2 border-t border-border">
             {user ? (
               <>
-                <Button variant="ghost" size="sm" asChild><Link to="/dashboard" onClick={() => setMobileOpen(false)}>Dashboard</Link></Button>
+                <Button variant="ghost" size="sm" asChild>
+                  <Link to="/dashboard" onClick={() => setMobileOpen(false)}>Dashboard</Link>
+                </Button>
                 <Button variant="outline" size="sm" onClick={handleSignOut}>Sign Out</Button>
               </>
             ) : (
               <>
-                <Button variant="ghost" size="sm" asChild><Link to="/signin" onClick={() => setMobileOpen(false)}>Sign In</Link></Button>
-                <Button variant="gradient" size="sm" asChild><Link to="/apply" onClick={() => setMobileOpen(false)}>Apply Now</Link></Button>
+                <Button variant="ghost" size="sm" asChild>
+                  <Link to="/signin" onClick={() => setMobileOpen(false)}>Sign In</Link>
+                </Button>
+                <Button variant="gradient" size="sm" asChild>
+                  <Link to="/apply" onClick={() => setMobileOpen(false)}>Apply Now</Link>
+                </Button>
               </>
             )}
           </div>
