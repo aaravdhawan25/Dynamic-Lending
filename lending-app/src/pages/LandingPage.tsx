@@ -169,8 +169,12 @@ export function LandingPage() {
                       <ArrowRight className="w-5 h-5 ml-1" />
                     </Link>
                   </Button>
-                  <Button variant="outline" size="xl" asChild>
-                    <Link to="/#how-it-works">See How It Works</Link>
+                  <Button
+                    variant="outline"
+                    size="xl"
+                    onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
+                  >
+                    See How It Works
                   </Button>
                 </motion.div>
 
