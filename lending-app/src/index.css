@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222 47% 5%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 7%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 7%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 47% 5%;
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217 33% 12%;
+    --muted-foreground: 215 20% 55%;
+    --accent: 217 33% 17%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217 33% 14%;
+    --input: 217 33% 14%;
+    --ring: 217 91% 60%;
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    margin: 0;
+    padding: 0;
+  }
+  #root {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    text-align: left;
+    border: none;
+    min-height: 100svh;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-cyan-400 to-emerald-400;
+  }
+  .text-gradient-blue {
+    @apply bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400;
+  }
+  .glass {
+    @apply bg-white/5 backdrop-blur-md border border-white/10;
+  }
+  .glow-blue {
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.25);
+  }
+  .glow-cyan {
+    box-shadow: 0 0 30px rgba(6, 182, 212, 0.25);
+  }
+  .loader {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(59, 130, 246, 0.2);
+    border-top-color: #3B82F6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(222, 47%, 5%);
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(217, 33%, 20%);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(217, 91%, 40%);
+}
